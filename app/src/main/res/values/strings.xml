@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">GPS Tracker</string>
+    <string name="start_prompt">Set mode and press button to record GPS...</string>
+    <string name="default_status_prompt">Log: </string>
+    <string name="stopping">Stopped</string>
+    <string name="moving">Moving</string>
+    <string name="recording_button">Recording Button</string>
+    <string name="recording_interval">Recording Interval:</string>
+    <string name="recording_notification">Recording...</string>
+    <string name="state_bundle_id">onethreeseven.gpsstoptrack.state</string>
+    <string name="notification_title_moving">Recording you as \"moving\"</string>
+    <string name="notification_title_stopped">Recording you as \"stopped\"</string>
+    <string name="notification_subtitle">Touch button to toggle movement</string>
+
+    <string name="receiver_movement_changed">onethreeseven.gpsstoptrack.receivermovementchanged</string>
+    <string name="receiver_activity_toggle_should_change">onethreeseven.gpsstoptrack.changethetoggle</string>
+    <string name="receiver_new_location">onethreeseven.gpsstoptrack.newlocation</string>
+
+    <string name="key_recording_interval">key_recording_interval</string>
+    <string name="key_is_recording">key_is_recording</string>
+    <string name="key_is_stopped">key_is_stopped</string>
+    <string name="key_location">key_location</string>
+
+    <string-array name="recording_intervals">
+        <item>1s</item>
+        <item>15s</item>
+        <item>30s</item>
+        <item>60s</item>
+    </string-array>
+
+</resources>

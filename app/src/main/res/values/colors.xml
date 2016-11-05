@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="appBg">#2b2b2b</color>
+    <color name="appText">#bababa</color>
+    <color name="toggleBtn">#3c3f41</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="recordBtnEndRed">#d50000</color>
+    <color name="recordBtnStartRed">#400000</color>
+    <color name="pureBlack">#000000</color>
+</resources>
