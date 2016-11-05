@@ -10,6 +10,6 @@ You can download the source and use android studio to build the .apk and install
 [**Pre-built .apk**](https://github.com/lukehb/137-GPS-Tracker/releases/tag/0.01)
 
 ### How to install - using the pre-built .apk?
-+ [Download the .apk](https://github.com/lukehb/137-GPS-Tracker/releases/tag/0.01) to your computer and run ```adb install gps_tracker.apk```.
-+ **Or** using your device [download the .apk](https://github.com/lukehb/137-GPS-Tracker/releases/tag/0.01), then go to your downloads folder tap on the .apk and install it.
++ **[Simplest way]** Using your Android device [download the .apk](https://github.com/lukehb/137-GPS-Tracker/releases/tag/0.01), then go to your downloads folder tap on the .apk and install it.
++ **Or** [Download the .apk](https://github.com/lukehb/137-GPS-Tracker/releases/tag/0.01) to your computer and run ```adb install gps_tracker.apk```.
 + **Or** [download the .apk](https://github.com/lukehb/137-GPS-Tracker/releases/tag/0.01) to your computer, then transfer it onto the device, then install an [.apk installer](https://play.google.com/store/search?q=apk%20installer&hl=en) to your device and use that to install it.
