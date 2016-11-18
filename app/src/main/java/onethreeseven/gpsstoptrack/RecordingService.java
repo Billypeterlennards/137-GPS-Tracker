@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -157,13 +159,15 @@ public class RecordingService extends Service {
 
         //make custom notification remote view
         RemoteViews customNotificationView = new RemoteViews(getPackageName(), R.layout.notification);
-        customNotificationView.setImageViewResource(R.id.notificationIcon, R.drawable.ic_gps_not_fixed_black_24dp);
+
+        customNotificationView.setImageViewResource(R.id.notificationIcon, R.mipmap.ic_launcher);
         //set different icon based on whether stopped or not
         if(trackerState.isStopped()){
-            customNotificationView.setImageViewResource(R.id.notificationMovementModeBtn, R.drawable.ic_directions_walk_black_24dp);
+            //customNotificationView.setIm
+            customNotificationView.setImageViewResource(R.id.notificationMovementModeBtn, R.drawable.ic_walk_guy);
             customNotificationView.setTextViewText(R.id.notificationTitle, getString(R.string.notification_title_stopped));
         }else{
-            customNotificationView.setImageViewResource(R.id.notificationMovementModeBtn, R.drawable.ic_directions_run_black_24dp);
+            customNotificationView.setImageViewResource(R.id.notificationMovementModeBtn, R.drawable.ic_run_guy);
             customNotificationView.setTextViewText(R.id.notificationTitle, getString(R.string.notification_title_moving));
         }
         //setup button onClick
@@ -181,9 +185,11 @@ public class RecordingService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, LOCATION_FOREGROUND_SERVICE, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+
+
         Notification notification = new NotificationCompat.Builder(this)
                 .setContent(customNotificationView)
-                .setSmallIcon(R.drawable.ic_gps_not_fixed_black_24dp)
+                .setSmallIcon(R.drawable.ic_gps_icon)
                 .setContentIntent(pendingIntent)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -191,6 +197,7 @@ public class RecordingService extends Service {
         notification.flags |= Notification.FLAG_NO_CLEAR |
                 Notification.FLAG_FOREGROUND_SERVICE |
                 Notification.FLAG_ONGOING_EVENT;
+
         return notification;
     }
 

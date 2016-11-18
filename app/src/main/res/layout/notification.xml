@@ -11,18 +11,20 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/ic_gps_not_fixed_black_24dp"
+        app:srcCompat="@mipmap/ic_launcher"
         android:id="@+id/notificationIcon"
+        android:scaleType="centerInside"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:layout_margin="5dp" />
+        style="@style/Widget.AppCompat.NotificationActionContainer"
+        android:background="@color/appText" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_marginLeft="5dp">
 
         <TextView
             android:text="@string/notification_title_moving"
@@ -48,8 +50,8 @@
         android:layout_height="match_parent"
         app:srcCompat="@drawable/ic_directions_run_black_24dp"
         android:id="@+id/notificationMovementModeBtn"
+        android:scaleType="fitXY"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        style="@style/Base.Widget.AppCompat.Button.Colored" />
+        style="@style/Widget.AppCompat.ImageButton" />
 
 </LinearLayout>

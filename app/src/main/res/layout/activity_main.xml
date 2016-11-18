@@ -34,8 +34,7 @@
         android:layout_weight="1"
         android:textSize="36sp"
         android:background="@color/toggleBtn"
-        android:textColor="@color/appText"
-        android:drawableRight="@drawable/ic_directions_run_black_24dp" />
+        android:textColor="@color/appText" />
 
     <TextView
         android:text="@string/recording_interval"

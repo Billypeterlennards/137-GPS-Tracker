@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,8 +16,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
 
     private UserFeedbackLog userFeedbackLog;
     private boolean permissionsGranted = false;
+
+    private final ValueAnimator recordBtnAnim = ValueAnimator.ofFloat(0,1);
+    private int endColor;
+    private int endColorRed;
+    private int startColor;
+    private int startColorRed;
 
     private BroadcastReceiver movementChangedReceiver = new BroadcastReceiver() {
         @Override
@@ -90,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         //register receiver
         localBroadcastManager.registerReceiver(movementChangedReceiver,
                 new IntentFilter(getString(R.string.receiver_activity_toggle_should_change)));
-       localBroadcastManager.registerReceiver(newLocationReceiver,
+        localBroadcastManager.registerReceiver(newLocationReceiver,
                 new IntentFilter(getString(R.string.receiver_new_location)));
     }
 
@@ -171,84 +178,107 @@ public class MainActivity extends AppCompatActivity {
             userFeedbackLog.logMovementChanged(isStopped);
         }
 
+        movementToggle.setCompoundDrawablesWithIntrinsicBounds(null, null, getStopMoveIcon(isStopped), null);
+
         movementToggle.setOnCheckedChangeListener(null);
         movementToggle.setChecked(!isStopped);
         movementToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isMoving) {
                 if(isMoving){
-                    movementToggle.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_directions_run_black_24dp, 0);
+                    movementToggle.setCompoundDrawablesWithIntrinsicBounds(null, null, getStopMoveIcon(false), null);
                 }else{
-                    movementToggle.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.ic_directions_walk_black_24dp, 0);
+                    movementToggle.setCompoundDrawablesWithIntrinsicBounds(null, null, getStopMoveIcon(true), null);
                 }
                 changeIsStopped(!isMoving);
             }
         });
     }
 
-    private void setupRecordingButton(Bundle bundle){
+    private Drawable getStopMoveIcon(boolean isStopped){
+        return isStopped ?
+                AppCompatResources.getDrawable(this, R.drawable.ic_directions_walk_black_24dp) :
+                AppCompatResources.getDrawable(this, R.drawable.ic_directions_run_black_24dp);
+    }
 
-        final int endColor = ContextCompat.getColor(getBaseContext(), R.color.recordBtnEndRed);
-        final int endColorRed = Color.red(endColor);
-        final int startColor = ContextCompat.getColor(getBaseContext(), R.color.recordBtnStartRed);
-        final int startColorRed = Color.red(startColor);
+    private void setupRecordBtnAnimator(){
+
+        endColor = ContextCompat.getColor(getBaseContext(), R.color.recordBtnEndRed);
+        endColorRed = Color.red(endColor);
+        startColor = ContextCompat.getColor(getBaseContext(), R.color.recordBtnStartRed);
+        startColorRed = Color.red(startColor);
 
         final ImageButton recordBtn = (ImageButton) findViewById(R.id.recordingBtn);
-        final ValueAnimator anim = ValueAnimator.ofFloat(0,1);
-        final Drawable drawableBtn = DrawableCompat.wrap(recordBtn.getDrawable());
-        final String keyIsRecording = getString(R.string.key_is_recording);
-        Log.i(MainActivity.class.getSimpleName(), "Bundle has isRecording key: " +
-                (bundle != null && bundle.containsKey(keyIsRecording)));
-        final boolean isRecording = bundle != null && bundle.getBoolean(keyIsRecording, false);
-
         //setup color tint animator (so it flashes red when button is pressed)
-        anim.setRepeatMode(ValueAnimator.REVERSE);
-        anim.setRepeatCount(ValueAnimator.INFINITE);
-        anim.setDuration(500);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        recordBtnAnim.setRepeatMode(ValueAnimator.REVERSE);
+        recordBtnAnim.setRepeatCount(ValueAnimator.INFINITE);
+        recordBtnAnim.setDuration(500);
+
+        recordBtnAnim.removeAllUpdateListeners();
+
+        recordBtnAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float t = (Float)valueAnimator.getAnimatedValue();
                 int r = (int) (((endColorRed - startColorRed) * t) + startColorRed);
                 int c = Color.argb(255, r, 0, 0);
-                DrawableCompat.setTint(drawableBtn, c);
+                tintBtn(recordBtn, c);
             }
         });
+    }
+
+    private void setupRecordingButton(Bundle bundle){
+
+        setupRecordBtnAnimator();
+
+        final ImageButton recordBtn = (ImageButton) findViewById(R.id.recordingBtn);
+        tintBtn(recordBtn, startColor);
+
+        final String keyIsRecording = getString(R.string.key_is_recording);
+        Log.i(MainActivity.class.getSimpleName(), "Bundle has isRecording key: " +
+                (bundle != null && bundle.containsKey(keyIsRecording)));
+        final boolean isRecording = bundle != null && bundle.getBoolean(keyIsRecording, false);
+        Log.i(MainActivity.class.getSimpleName(), "Is recording: " + isRecording);
 
         //set the button animating and color based on the state in the bundle
         if(isRecording){
-            anim.start();
+            recordBtnAnim.start();
         }else{
-            anim.end();
-            DrawableCompat.setTint(drawableBtn, startColor);
+            recordBtnAnim.end();
+            tintBtn(recordBtn, startColor);
         }
 
         //setup button press to record and stop recording
         recordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(anim.isRunning()){
-                    endRecording(anim);
+                if(recordBtnAnim.isRunning()){
+                    endRecording();
                     //always set it the tint to black (as a starting or ending tint for the button)
-                    DrawableCompat.setTint(drawableBtn, startColorRed);
+                    tintBtn(recordBtn, startColor);
                 }else{
-                    startRecording(anim);
+                    startRecording();
                 }
             }
         });
     }
 
-    private void startRecording(ValueAnimator anim){
+    private void tintBtn(ImageButton btn, int color){
+        btn.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+    }
+
+    private void startRecording(){
         changeIsRecording(true);
-        anim.start();
+        recordBtnAnim.start();
         //disable the spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setEnabled(false);
     }
 
-    private void endRecording(ValueAnimator anim){
-        anim.end();
+    private void endRecording(){
         stopService(new Intent(this, RecordingService.class));
+        recordBtnAnim.cancel();
+        recordBtnAnim.end();
         //re-enable the spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinner.setEnabled(true);
